@@ -2,7 +2,7 @@ const mongoCollections = require("../config/mongoCollections");
 const bands = mongoCollections.bands;
 const { ObjectId } = require("mongodb");
 
-const create = async (
+const createBand = async (
   name,
   genre,
   website,
@@ -59,14 +59,14 @@ const create = async (
   return JSON.parse(JSON.stringify(band));
 };
 
-const getAll = async () => {
+const getAllBands = async () => {
   const bandsCollection = await bands();
   const bandsList = await bandsCollection.find({}).toArray();
   if (!bandsList) throw "Could not get all bands";
   return JSON.parse(JSON.stringify(bandsList));
 };
 
-const get = async id => {
+const getBand = async id => {
   if (!id) throw "You must provide an id to search for";
   if (typeof id !== "string") throw "Id must be a string";
   if (id.trim().length === 0)
@@ -81,7 +81,7 @@ const get = async id => {
   return JSON.parse(JSON.stringify(band));
 };
 
-const remove = async id => {
+const removeBand = async id => {
   if (!id) throw "You must provide an id to search for";
   if (typeof id !== "string") throw "Id must be a string";
   if (id.trim().length === 0)
@@ -100,7 +100,7 @@ const remove = async id => {
   return `${deletionInfo.name} has been successfully deleted`;
 };
 
-const rename = async (id, newName) => {
+const renameBand = async (id, newName) => {
   if (!id) throw "You must provide an id to search for";
   if (typeof id !== "string") throw "Id must be a string";
   if (id.trim().length === 0)
@@ -126,4 +126,4 @@ const rename = async (id, newName) => {
   return JSON.parse(JSON.stringify(updatedInfo.value));
 };
 
-module.exports = { get, getAll, remove, rename, create };
+module.exports = { getBand, getAllBands, removeBand, renameBand, createBand };

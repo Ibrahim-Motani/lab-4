@@ -1,9 +1,9 @@
-const { create, get, getAll, rename, remove } = require("./data/bands");
+const { createBand, getBand, getAllBand, renameBand, removeBand } = require("./data/bands");
 const connection = require("./config/mongoConnection");
 
 const main = async () => {
   try {
-    const chainsmokers = await create(
+    const chainsmokers = await createBand(
       "Chainsmokers",
       ["Progressive Rock", "Psychedelic rock", "Classic Rock"],
       "http://www.chainsmokers.com",
@@ -17,28 +17,28 @@ const main = async () => {
   }
 
   try {
-    const result = await getAll();
+    const result = await getAllBands();
     console.log(result);
   } catch (error) {
     console.log(error);
   }
 
   try {
-    const result = await get("62095581c5233015aaba8a0a");
+    const result = await getBand("62095581c5233015aaba8a0a");
     console.log(result);
   } catch (error) {
     console.log(error);
   }
 
   try {
-    const result = await remove("6209556995c27752334e270c");
+    const result = await removeBand("6209556995c27752334e270c");
     console.log(result);
   } catch (error) {
     console.log(error);
   }
 
   try {
-    const result = await rename("620954e459522d2ae4bc1488", "Bombay blues");
+    const result = await renameBand("620954e459522d2ae4bc1488", "Bombay blues");
     console.log(result);
   } catch (error) {
     console.log(error);
