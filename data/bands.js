@@ -56,14 +56,14 @@ const create = async (
     _id: ObjectId(newId),
   });
 
-  return band.json();
+  return JSON.parse(JSON.stringify(band));
 };
 
 const getAll = async () => {
   const bandsCollection = await bands();
   const bandsList = await bandsCollection.find({}).toArray();
   if (!bandsList) throw "Could not get all bands";
-  return bandsList;
+  return JSON.parse(JSON.stringify(bandsList));
 };
 
 const get = async id => {
@@ -78,7 +78,7 @@ const get = async id => {
   const band = await bandCollection.findOne({ _id: ObjectId(id) });
   if (band === null) throw "No band with that id";
 
-  return band;
+  return JSON.parse(JSON.stringify(band));
 };
 
 const remove = async id => {
@@ -90,14 +90,14 @@ const remove = async id => {
   if (!ObjectId.isValid(id)) throw "invalid object ID";
 
   const bandCollection = await bands();
-  const deletionInfo = await bandCollection.findOneAndDelete({
-    _id: ObjectId(id),
-  });
+
+  const deletionInfo = await get(id);
+  await bandCollection.deleteOne({ _id: ObjectId(id) });
 
   if (!deletionInfo) {
     throw `Could not delete band with id of ${id}`;
   }
-  return `${deletedInfo.name} has been successfully deleted`;
+  return `${deletionInfo.name} has been successfully deleted`;
 };
 
 const rename = async (id, newName) => {
@@ -117,13 +117,13 @@ const rename = async (id, newName) => {
   const updatedInfo = await bandsCollection.findOneAndUpdate(
     { _id: ObjectId(id) },
     { $set: { name: newName } },
-    { new: true }
+    { returnOriginal: false }
   );
   if (!updatedInfo) {
     throw "could not find and update band successfully";
   }
-
-  return updatedInfo;
+  updatedInfo.value.name = newName;
+  return JSON.parse(JSON.stringify(updatedInfo.value));
 };
 
 module.exports = { get, getAll, remove, rename, create };
